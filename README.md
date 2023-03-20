@@ -11,7 +11,7 @@ Data processing code from validation study of the Torso-dynamics Estimation Syst
 ## Introduction
 The code files in this repository are used to process data was collected during a validation study of our Torso-Dynamics Estimation System (TES). The TES consisted of a Force Sensing Seat (FSS) and an inertial measurement unit (IMU) that measured the kinetics and kinematics of the subject's torso motions. The FSS estimated the 3D forces, 3D moments, and 2D COPs while the IMU estimated the 3D torso angles. To validate the TES, the FSS and IMU estimates were compared to gold standard research equipment (AMTI force plate and Qualisys motion capture system, respectively).
 
-There were two generations of the FSS, FSS Gen 1.0 and FSS Gen 2.0. This repository contains data processing code from the validation study of each FSS generation. So, some of the code files pertain to only one of the FSS generations. Any code files with "Gen1" or "Gen2" in the name are for processing data from only that corresponding FSS generation. All other files are supporting functions that are used to process data from both FSS generations.
+**NOTE:** There were two generations of the FSS, FSS Gen 1.0 and FSS Gen 2.0. This repository contains data processing code from the validation study of each FSS generation. So, some of the code files correspond with only one of the FSS generations. Any code files with "Gen1" or "Gen2" in the name are for processing data from only that FSS generation. All other files are supporting functions that are used to process data from both FSS generations.
 
 ### Models of Equipment Used
 - **Load cells (used in FSS)**
@@ -31,9 +31,6 @@ The following units were used for the validation study data:
 - **3D Torso Angles:** degrees
 
 ## Directory Structure and Required Files
-### Data processing code files
-The MATLAB code files for processing this data can be found in [this GitHub repository](https://github.com/ssong47/TorsodynamicsEstimationSystem). The repository will have a folder named *TES Data Processing Code* that contains all the MATLAB code files needed to process this data. Note that the name of this folder corresponds to the folder of the same name in the directory structure described below.
-
 ### Directory structure
 Before downloading the data files and data processing code, you need to set up your directory to match the directories used in the code. Following this directory structure will make it easier to update your directories in the code. Specifically, directories will need to be updated in the following code files:
 - Gen1_aggregate_data_processing.m
@@ -70,9 +67,9 @@ Most of the MATLAB code files in this repository are supporting functions used i
 - Gen1_aggregate_data_processing.m
 - Gen2_aggregate_data_processing.m
 
-First, you will need to run the MAIN script (choose Gen 1 or Gen 2 depending on which FSS validation study you want to analyze) to do the initial processing of the data. This script needs to be run for each subject and trial combination individually. Since there were some issues with the data collection, the best trials from each subject were used in the data processing. The following tables give the best trial from each subject in each FSS generation validation study. You only need to run the MAIN script for these subject/trial combinations. Note that these best trials are also listed in comments in the MAIN code files.
+First, you will need to run the MAIN script (choose Gen 1 or Gen 2 depending on which FSS validation study you want to analyze) to do the initial processing of the data. For the MAIN script, there are several things that need to be changed before you run it. You can change the subject by changing the cell array *subjects* and change the trial number by changing the variable *i_trial*. You can also choose a few different options in the code by changing *raw_plot_status*, *plot_status*, and/or *save_status*. *raw_plot_status* lets you choose whether you want the script to generate plots of the raw data. Similarly, *plot_status* lets you choose whether the script will generate plots of the processed data. The value of *save_status* needs to be 1 in order to save the processed data files that are used in the aggregate data processing script. Lastly, the directories at the beginning of the code will need to be updated according to the directory structure mentioned in the previous section of this document. 
 
-For the MAIN script, you can change the subject by changing the cell array *subjects* and change the trial number by changing the variable *i_trial*. In addition, the directories at the beginning of the code will need to be updated according to the directory structure mentioned in the previous section of this document. 
+The MAIN script needs to be run for each subject and trial combination individually. Since there were some issues with the data collection, the best trials from each subject were used in the data processing. The following tables give the best trial from each subject in each FSS generation validation study. You only need to run the MAIN script for these subject/trial combinations. Note that these best trials are also listed in comments in the MAIN code files.
 
 **For FSS Gen 1.0:**<br>
 | Subject | Best Trial |
@@ -98,9 +95,39 @@ For the MAIN script, you can change the subject by changing the cell array *subj
 | S7 | 1 |
 | S8 | 3 |
 
-Once the MAIN script has been run for all subject/trial combinations, you can run the aggregate data processing script. The aggregate data processing script will use the files generated by the MAIN script, so make sure that the MAIN script has been run with all subject/trial combinations before trying to run the aggregate data processing script. In the aggregate data processing script, the subjects are defined in the cell array *subjects* while the trials for each subjects are defined in the array *trials*. You **do not** need to change these since they are already populated with the correct subject/trial combinations. However, you will still need to update the directories at the beginning of the code according to the directory structure described in the previous section.
+Once the MAIN script has been run for all subject/trial combinations, you can run the aggregate data processing script (choose Gen 1 or Gen 2 to match MAIN script that was run). The aggregate data processing script will use the files generated by the MAIN script, so make sure that the MAIN script has been run with all subject/trial combinations before trying to run the aggregate data processing script. In the aggregate data processing script, the subjects are defined in the cell array *subjects* while the trials for each subjects are defined in the array *trials*. You **do not** need to change these since they are already populated with the correct subject/trial combinations. However, you will still need to update the directories at the beginning of the code according to the directory structure described in the previous section.
 
 ## Code File Descriptions
 All of the MATLAB code files are commented, but for quick reference, they are summarized below.
-1. 
+
+1. **[align_Ylabels.m](https://www.mathworks.com/matlabcentral/fileexchange/41701-y-labels-alignment-in-subplots):** Aligns the y-labels in each column of a subplots-based figure such that they all have the same x-coordinate value. The function works both with the default MATLAB subplot command and with the [subplot1](http://www.mathworks.com/matlabcentral/fileexchange/9694) function. 
+2. **apply_butterworth_filter.m:** Removes noise from raw data by applying a Butterworth filter given the filter parameters a and b.
+3. **compute_angle_two_v.m:** Computes the angle between two vectors u and v in 3D space (x, y, z).
+4. **compute_COP.m:** Computes the center of pressure (COP) components from the force data (force data can be from AMTI or FSS).
+5. **compute_mocap_angle.m:** Computes angles of the torso (yaw, pitch, roll) from motion capture data given the body frame (torso frame) and the world frame (motion capture system origin frame).
+6. **compute_R_from_basis.m:** Computes final rotation matrix given the rotation matrix in body frame (torso frame) and rotation matrix in world frame (motion capture system origin frame).
+7. **compute_rmse.m:** Computes RMSE given reference (gold standard: AMTI force plate or Qualisys motion capture) and estimate (FSS or IMU).
+8. **compute_seat_angle.m:** Uses motion capture data (origin_pts, seat_pts) to calculate theta_x and theta_y, the FSS seat angles.
+    - origin_pts = origin points of motion capture system (markers on Qualisys L-frame)
+    - seat_pts = motion capture markers on corners of FSS seat
+9. **filter_data.m:** Finds Butterworth filter parameters bHP and aHP given order of filter, cutoff frequency, sampling frequency, and filter type. Then, applies a Butterworth filter to the raw data using parameters bHP and aHP.
+10. **Gen1_aggregate_data_processing.m:** Generates a table of averages and standard errors of the RMSE, max, and min for data of two subject groups.
+    - Data: F<sub>x</sub>, F<sub>y</sub>, F<sub>z</sub>, M<sub>x</sub>, M<sub>y</sub>, M<sub>z</sub>, COP<sub>x</sub>, COP<sub>y</sub>, yaw, pitch, roll
+    - Subject groups: able-bodied users (ABUs) and manual wheelchair users (mWCUs) 
+    - *NOTE:* This is for FSS Gen 1.0 ONLY! To get table for FSS Gen 2.0, use Gen2_aggregate_data_processing.m
+11. **Gen1_get_offsets.m:** Since data collection was not synchronized, time offsets were found. The found offsets are used to align all data in the time axis.
+    - *NOTE:* this function applies offsets for the Gen 1.0 FSS study. Use Gen2_get_offsets.m if analyzing data from the Gen 2.0 FSS study
+12. **Gen2_aggregate_data_processing.m:** Generates a table of averages and standard errors of the RMSE, max, and min for data of two subject groups.
+    - Data: F<sub>x</sub>, F<sub>y</sub>, F<sub>z</sub>, M<sub>x</sub>, M<sub>y</sub>, M<sub>z</sub>, COP<sub>x</sub>, COP<sub>y</sub>, yaw, pitch, roll
+    - Subject groups: able-bodied users (ABUs) and manual wheelchair users (mWCUs) 
+    - *NOTE:* This is for FSS Gen 2.0 ONLY! To get table for FSS Gen 1.0, use Gen1_aggregate_data_processing.m
+13. **Gen2_get_offsets.m:** Since data collection was not synchronized, time offsets were found. The found offsets are used to align all data in the time axis.
+    - *NOTE:* this function applies offsets for the Gen 2.0 FSS study. Use Gen1_get_offsets.m if analyzing data from the Gen 1.0 FSS study
+14. **get_mocap_frames.m:** Calculates the frames of the torso, FSS seat, and motion capture system origin.
+15. **MAIN_data_process_Gen1study.m:** Processes the FSS, QTM (Qualisys motion capture), VN IMU, and AMTI force plate data for the Gen 1.0 FSS design validation study. FSS load cells are used to calculate 3 forces, 3 moments, and 2 COP coordinates. FSS data are compared to the gold standard, AMTI force plate. VN IMU signals are used to calculate torso angles (yaw, pitch, roll). IMU data are compared to the gold standard, Qualisys motion capture.
+    - *NOTE:* This is for FSS Gen 1.0 ONLY! To get master data and plots for FSS Gen 2.0, use MAIN_data_process_Gen2study.m
+16. **MAIN_data_process_Gen2study.m:** Processes the FSS, QTM (Qualisys motion capture), VN IMU, and AMTI force plate data for the Gen 2.0 FSS design validation study. FSS load cells are used to calculate 3 forces, 3 moments, and 2 COP coordinates. FSS data are compared to the gold standard, AMTI force plate. VN IMU signals are used to calculate torso angles (yaw, pitch, roll). IMU data are compared to the gold standard, Qualisys motion capture.
+    - *NOTE:* This is for FSS Gen 2.0 ONLY! To get master data and plots for FSS Gen 1.0, use MAIN_data_process_Gen1study.m
+17. **process_imu_vn_data.m:** Computes torso angles (yaw, pitch, roll) from VN IMU data.
+18. **process_mocap_data.m:** Uses motion capture data to calculate the motion capture torso angles, FSS seat x angle, and FSS seat y angle.
 
