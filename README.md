@@ -58,7 +58,7 @@ In each of these files, there are also comments explaining the directory structu
 - *FSS Gen 1.0 Figures* and *FSS Gen 2.0 Figures:* Empty folders where generated figures will be saved <br>
 
 ### Data files
-Due to the size of the data files, they were unable to be uploaded to this repository. Instead, they were uploaded to this IEEE DataPort **(INSERT LINK HERE)**. In this DataPort, there are two zipped folders named *FSS Gen 1.0 Data* and *FSS Gen 2.0 Data*, which correspond to the folders in the directory structure described above. You will need to unzip the folders and then put them in the directory structure.
+Due to the size of the data files, they were unable to be uploaded to this repository. Instead, they were uploaded to this IEEE DataPort **(INSERT LINK HERE)**. In this DataPort, there are two zipped folders named *FSS Gen 1.0 Data* and *FSS Gen 2.0 Data*, which correspond to the folders in the directory structure described above. You will need to unzip the folders and then put them in the directory structure. For more information on the data that was collected, see the README file in the IEEE DataPort.
 
 ## Using the Code
 Most of the MATLAB code files in this repository are supporting functions used in the main data processing scripts. As a result, you will only need to run the main data processing scripts, which are:
